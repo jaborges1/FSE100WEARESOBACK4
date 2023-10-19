@@ -1,0 +1,26 @@
+function setup() {
+  createCanvas(700, 600);
+  draw();
+}
+
+function draw() {
+  background(color(0,0,0));
+  moleButton = createButton("Whack-a-mole");
+  moleButton.position(100,200);
+  cardButton = createButton("Card Game");
+  cardButton.position(325,200);
+  simonButton = createButton("Simon");
+  simonButton.position(525,200);
+  textSize(44);
+  text('FMS Project', 255, 100);
+  fill(200,200,200);
+  //needs method to move screen
+  moleButton.mousePressed();
+  cardButton.mousePressed();
+  simonButton.mousePressed();
+}
+
+//likely need method to create each new screen
+function whackAMole(){
+  
+}

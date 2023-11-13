@@ -1,26 +1,132 @@
-function setup() {
-  createCanvas(700, 600);
-  draw();
-}
+let sequence;
+let typedSequence;
+let clickedLog;
 
-function draw() {
-  background(color(0,0,0));
-  moleButton = createButton("Whack-a-mole");
-  moleButton.position(100,200);
-  cardButton = createButton("Card Game");
-  cardButton.position(325,200);
-  simonButton = createButton("Simon");
-  simonButton.position(525,200);
-  textSize(44);
-  text('FMS Project', 255, 100);
-  fill(200,200,200);
-  //needs method to move screen
-  moleButton.mousePressed();
-  cardButton.mousePressed();
-  simonButton.mousePressed();
-}
-
-//likely need method to create each new screen
-function whackAMole(){
+function setup(){
+  createCanvas(700,300);
+  sequence = [];
+  typedSequence = [];
+  clickedLog = [];
+  flashing = false;
+  circleRed = new Circle(150,150,"red",0);
+  circleBlue = new Circle(300,150,"blue",1);
+  circleGreen = new Circle(450,150,"green",2);
+  circleYellow = new Circle(600,150,"yellow",3);
+  circles = [circleRed, circleBlue, circleGreen, circleYellow];
+  startGame = createButton('Start Game');
+  addSequence();
+  startGame.mousePressed(playSequence);
+  next = createButton('Next Sequence');
+  next.mousePressed(addSequence);
+  confirm = createButton('Confirm Answer')
+  confirm.mousePressed(passed)
+  
   
 }
+
+function draw(){
+  frameRate(10)
+  for (let i = 0; i < circles.length; i++) {
+    circles[i].show();
+    circles[i].hover();
+    if (mouseIsPressed) {
+      circles[i].clicked();
+    }
+  }
+}
+
+function passed(){
+  if(verify){
+    print("Correct!")
+  } else {
+    print("You lose!")
+  }
+  clickedLog = [];
+}
+
+function verify(){
+  for(i = 0; i<sequence.length; i++){
+    if(sequence[i] != clickedLog[i]){
+      return false;
+    }
+  }
+  return true;
+}
+
+function interpretSequence(){
+  for(i = 0; i<sequence.length; i++){
+    switch(sequence[i]){
+      case 0:
+      typedSequence[i] = "Red";
+      break;
+      
+      case 1:
+      typedSequence[i] = "Blue";
+      break;
+      
+      case 2:
+      typedSequence[i] = "Green";
+      break;
+      
+      case 3:
+      typedSequence[i] = "Yellow";
+      break;
+    }
+  }
+}
+
+function playSequence(){
+  interpretSequence();
+  print(typedSequence);
+  setTimeout(filler, 2000);
+  
+}
+
+function filler(){
+  for(i = 0; i<1000; i++){
+    print(random(1,10000))
+  }
+}
+
+function addSequence(){
+  number = int(random(0,4));
+  sequence.push(number);
+  print(sequence);
+}
+
+class Circle{
+  constructor(x,y,color,id){
+    this.x = x;
+    this.y = y;
+    this.circleColor = color;
+    this.clickedColor = "orange";
+    this.color = "black";
+    this.size = 100;
+    this.id = id;
+    this.selected = false;
+    this.startTime = millis()
+    this.clickedLog = []
+  }
+  
+  show(){
+    fill(this.color);
+    ellipse(this.x,this.y,this.size);
+  }
+  
+  hover(){
+  	if(dist(mouseX, mouseY, this.x, this.y)< this.size/2){
+		fill(this.circleColor);
+  		ellipse(this.x,this.y,this.size);
+    }
+  }
+  
+  clicked(){
+    if(dist(mouseX, mouseY, this.x, this.y)< this.size/2){
+ 		fill(this.clickedColor);
+      	ellipse(this.x,this.y,this.size);
+        clickedLog.push(this.id)
+        print(clickedLog)
+    }
+  }
+}
+
